@@ -5,6 +5,7 @@ Standar Kepatuhan: BPOM RI CPOB 2018/2024, cGMP FDA 21 CFR Part 211, ICH Q9 & Q1
 
 import streamlit as st
 import pandas as pd
+import json
 from datetime import datetime
 
 # Page Configuration
