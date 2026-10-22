@@ -29,29 +29,36 @@ st.markdown("""
     /* Clean Hero Banner */
     /* Clean Hero Banner with High Contrast for Both Light & Dark Modes */
     .hero-banner {
-        background: linear-gradient(135deg, #091e3a 0%, #034870 100%) !important;
+        background-color: #0b223d !important;
+        background: linear-gradient(135deg, #0b223d 0%, #034870 100%) !important;
         border: 2px solid #38bdf8 !important;
         border-radius: 16px !important;
         padding: 24px 28px !important;
         margin-bottom: 22px !important;
-        box-shadow: 0 4px 25px rgba(3, 105, 161, 0.25) !important;
+        box-shadow: 0 4px 25px rgba(3, 105, 161, 0.3) !important;
     }
-    .hero-badge {
+    .hero-banner * {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }
+    .hero-banner .hero-badge {
         display: inline-flex !important;
         align-items: center !important;
         gap: 6px !important;
         background: #0284c7 !important;
         color: #ffffff !important;
-        padding: 5px 14px !important;
+        -webkit-text-fill-color: #ffffff !important;
+        border: 1px solid #7dd3fc !important;
+        padding: 4px 14px !important;
         border-radius: 999px !important;
-        font-size: 12px !important;
+        font-size: 11.5px !important;
         font-weight: 700 !important;
         letter-spacing: 0.5px !important;
         margin-bottom: 10px !important;
     }
-    /* Explicitly override Streamlit's default h1 color in light mode */
-    .hero-banner h1, h1.hero-title, .hero-title {
+    .hero-banner .hero-title, .hero-title {
         color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
         font-size: 28px !important;
         font-weight: 850 !important;
         letter-spacing: -0.02em !important;
@@ -61,7 +68,8 @@ st.markdown("""
     }
     .hero-banner .hero-desc, .hero-desc {
         color: #f0f9ff !important;
-        font-size: 14.5px !important;
+        -webkit-text-fill-color: #f0f9ff !important;
+        font-size: 14px !important;
         line-height: 1.55 !important;
         margin-top: 8px !important;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
@@ -346,17 +354,13 @@ PRESETS = {
     }
 }
 
-# --- HEADER SECTION (BULLETPROOF HIGH CONTRAST INLINE STYLES FOR LIGHT/DARK MODE) ---
+# --- HEADER SECTION (HIGH CONTRAST HERO BANNER) ---
 st.markdown("""
-<div style="background: linear-gradient(135deg, #034870 0%, #091e3a 100%) !important; border: 2px solid #38bdf8 !important; border-radius: 16px !important; padding: 22px 26px !important; margin-bottom: 22px !important; box-shadow: 0 6px 25px rgba(2, 132, 199, 0.3) !important;">
-    <div style="display: inline-block !important; background: #0284c7 !important; color: #ffffff !important; border: 1px solid #7dd3fc !important; padding: 4px 14px !important; border-radius: 999px !important; font-size: 11.5px !important; font-weight: 800 !important; letter-spacing: 0.5px !important; margin-bottom: 10px !important;">
-        ✚ SISTEM MANAJEMEN PENYIMPANGAN MUTU PABRIK FARMASI
-    </div>
-    <div style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 27px !important; font-weight: 900 !important; letter-spacing: -0.02em !important; line-height: 1.3 !important; margin: 0 0 8px 0 !important; text-shadow: 0 2px 8px rgba(0,0,0,0.8) !important;">
-        PharmaCAPA AI — Operator &amp; QA Deviation Copilot
-    </div>
-    <div style="color: #f0f9ff !important; -webkit-text-fill-color: #f0f9ff !important; font-size: 14px !important; line-height: 1.55 !important; opacity: 0.98 !important; text-shadow: 0 1px 4px rgba(0,0,0,0.5) !important;">
-        Antarmuka terpadu untuk Operator Produksi, Teknisi Mesin, dan Tim QA dalam melaporkan deviasi bets, menganalisis akar masalah (6M Ishikawa &amp; 5-Whys), serta menyusun dokumen CAPA berstandar <strong style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-weight: 800 !important;">BPOM CPOB 2018/2024 &amp; ICH Q9/Q10</strong>.
+<div class="hero-banner">
+    <div class="hero-badge">✚ SISTEM MANAJEMEN PENYIMPANGAN MUTU PABRIK FARMASI</div>
+    <div class="hero-title">PharmaCAPA AI — Operator &amp; QA Deviation Copilot</div>
+    <div class="hero-desc">
+        Antarmuka terpadu untuk Operator Produksi, Teknisi Mesin, dan Tim QA dalam melaporkan deviasi bets, menganalisis akar masalah (6M Ishikawa &amp; 5-Whys), serta menyusun dokumen CAPA berstandar <strong>BPOM CPOB 2018/2024 &amp; ICH Q9/Q10</strong>.
     </div>
 </div>
 """, unsafe_allow_html=True)
