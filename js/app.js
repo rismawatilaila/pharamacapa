@@ -349,8 +349,28 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/'/g, '&#39;');
   }
 
-  // 7. Initial Startup Sequence
+  // 7. Operator Quick Incident Chips
+  function initQuickChips() {
+    const chipBtns = document.querySelectorAll('.quick-chip-btn');
+    chipBtns.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const type = chip.getAttribute('data-chip');
+        if (type === 'dissolution') {
+          document.getElementById('presetBtn1').click();
+        } else if (type === 'thermal') {
+          document.getElementById('presetBtn2').click();
+        } else if (type === 'sterile') {
+          document.getElementById('presetBtn3').click();
+        } else if (type === 'capping') {
+          document.getElementById('presetBtn4').click();
+        }
+      });
+    });
+  }
+
+  // 8. Initial Startup Sequence
   initPresetButtons();
+  initQuickChips();
   updateApiStatusDisplay();
 
   // Load Preset 1 by default
