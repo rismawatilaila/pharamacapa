@@ -346,13 +346,17 @@ PRESETS = {
     }
 }
 
-# --- HEADER SECTION ---
+# --- HEADER SECTION (BULLETPROOF HIGH CONTRAST INLINE STYLES FOR LIGHT/DARK MODE) ---
 st.markdown("""
-<div class="hero-banner">
-    <div class="hero-badge">✚ SISTEM MANAJEMEN PENYIMPANGAN MUTU PABRIK FARMASI</div>
-    <h1 class="hero-title">PharmaCAPA AI — Operator &amp; QA Deviation Copilot</h1>
-    <div class="hero-desc">
-        Antarmuka terpadu untuk Operator Produksi, Teknisi Mesin, dan Tim QA dalam melaporkan deviasi bets, menganalisis akar masalah (6M Ishikawa &amp; 5-Whys), serta menyusun dokumen CAPA berstandar <strong>BPOM CPOB 2018/2024 &amp; ICH Q9/Q10</strong>.
+<div style="background: linear-gradient(135deg, #034870 0%, #091e3a 100%) !important; border: 2px solid #38bdf8 !important; border-radius: 16px !important; padding: 22px 26px !important; margin-bottom: 22px !important; box-shadow: 0 6px 25px rgba(2, 132, 199, 0.3) !important;">
+    <div style="display: inline-block !important; background: #0284c7 !important; color: #ffffff !important; border: 1px solid #7dd3fc !important; padding: 4px 14px !important; border-radius: 999px !important; font-size: 11.5px !important; font-weight: 800 !important; letter-spacing: 0.5px !important; margin-bottom: 10px !important;">
+        ✚ SISTEM MANAJEMEN PENYIMPANGAN MUTU PABRIK FARMASI
+    </div>
+    <div style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 27px !important; font-weight: 900 !important; letter-spacing: -0.02em !important; line-height: 1.3 !important; margin: 0 0 8px 0 !important; text-shadow: 0 2px 8px rgba(0,0,0,0.8) !important;">
+        PharmaCAPA AI — Operator &amp; QA Deviation Copilot
+    </div>
+    <div style="color: #f0f9ff !important; -webkit-text-fill-color: #f0f9ff !important; font-size: 14px !important; line-height: 1.55 !important; opacity: 0.98 !important; text-shadow: 0 1px 4px rgba(0,0,0,0.5) !important;">
+        Antarmuka terpadu untuk Operator Produksi, Teknisi Mesin, dan Tim QA dalam melaporkan deviasi bets, menganalisis akar masalah (6M Ishikawa &amp; 5-Whys), serta menyusun dokumen CAPA berstandar <strong style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-weight: 800 !important;">BPOM CPOB 2018/2024 &amp; ICH Q9/Q10</strong>.
     </div>
 </div>
 """, unsafe_allow_html=True)
