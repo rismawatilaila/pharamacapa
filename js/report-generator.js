@@ -243,6 +243,63 @@ class PharmaReportGenerator {
     window.print();
   }
 
+  /**
+   * Export the complete official CPOB document as a formatted Microsoft Word file (.doc)
+   * @param {Object} data - Deviation data
+   */
+  downloadWordDoc(data) {
+    if (!data) return;
+    const docElement = document.getElementById('cpobOfficialDocument');
+    if (!docElement) return;
+
+    const contentHtml = docElement.innerHTML;
+    const preHtml = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head>
+        <meta charset='utf-8'>
+        <title>Formulir CPOB - ${data.code || 'DEV-2026'}</title>
+        <!--[if gte mso 9]>
+        <xml>
+          <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>100</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+          </w:WordDocument>
+        </xml>
+        <![endif]-->
+        <style>
+          body { font-family: 'Arial', sans-serif; font-size: 10pt; color: #0f172a; line-height: 1.35; margin: 15mm; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+          td, th { border: 1px solid #475569; padding: 6px 8px; font-size: 9pt; }
+          .doc-header-border { border: 2px solid #0f172a; margin-bottom: 12px; }
+          .rep-section-title { background: #0f172a; color: #ffffff; font-weight: bold; padding: 5px 8px; font-size: 9.5pt; margin-top: 10px; margin-bottom: 5px; }
+          .grid-label { background: #f1f5f9; font-weight: bold; width: 130px; }
+          .rep-badge-critical { background: #fee2e2; color: #991b1b; font-weight: bold; }
+          .rep-badge-major { background: #fef3c7; color: #92400e; font-weight: bold; }
+          .rep-badge-minor { background: #e0f2fe; color: #075985; font-weight: bold; }
+          .digital-sign-stamp { border: 1.5px dashed #0284c7; padding: 5px; text-align: center; font-size: 8pt; font-weight: bold; color: #0284c7; }
+          .stamp-gold { border-color: #b45309; color: #b45309; }
+          .effectiveness-box { border: 1px dashed #0284c7; background: #f0f9ff; padding: 6px 10px; font-size: 8.5pt; margin-top: 8px; }
+        </style>
+      </head>
+      <body>
+    `;
+    const postHtml = `</body></html>`;
+    const fullHtml = preHtml + contentHtml + postHtml;
+
+    const blob = new Blob(['\ufeff', fullHtml], {
+      type: 'application/msword'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Formulir_CPOB_${data.code || 'DEV-2026'}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   escapeHtml(str) {
     if (!str) return '';
     return String(str)

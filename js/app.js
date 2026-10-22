@@ -298,6 +298,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.pharmaReport.printReport();
   });
 
+  const btnDownloadWord = document.getElementById('btnDownloadWord');
+  if (btnDownloadWord) {
+    btnDownloadWord.addEventListener('click', () => {
+      if (state.currentAnalysisData) {
+        window.pharmaReport.downloadWordDoc(state.currentAnalysisData);
+      }
+    });
+  }
+
   // Close modal when clicking background overlay
   elements.reportModal.addEventListener('click', (e) => {
     if (e.target === elements.reportModal) {

@@ -1465,29 +1465,45 @@ body {
   padding-top: 5px;
 }
 
-/* Print Media Query */
+/* Print Media Query - Flawless Multi-Page CPOB PDF Output */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
   body {
     background: #ffffff !important;
     color: #000000 !important;
     padding: 0 !important;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
+  /* Hide all UI navigation, buttons, studio form, and settings modal */
   .top-navbar,
   .case-selector-bar,
   .studio-grid,
   .modal-header,
   .modal-footer,
   .btn-primary,
-  .btn-secondary {
+  .btn-secondary,
+  #apiModal,
+  .quick-chips-wrapper {
     display: none !important;
   }
 
-  .modal-overlay {
+  /* Unhide ONLY the official CPOB report modal */
+  #reportModal {
     position: static !important;
     background: none !important;
     padding: 0 !important;
+    margin: 0 !important;
     display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
   .modal-container {
@@ -1495,14 +1511,47 @@ body {
     border: none !important;
     max-width: 100% !important;
     width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
   }
 
   .modal-body {
     padding: 0 !important;
+    margin: 0 !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  #reportDocContainer {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .cpob-official-doc {
     box-shadow: none !important;
     padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Prevent awkward page break cutting inside critical tables & signatures */
+  .doc-header-border,
+  .rep-data-grid,
+  .risk-summary-flex,
+  .rep-capa-table,
+  .sign-off-table,
+  .effectiveness-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .rep-section {
+    page-break-inside: auto;
   }
 }

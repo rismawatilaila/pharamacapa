@@ -507,11 +507,142 @@ BAGIAN 5: OTORISASI & TANDA TANGAN
 - Qualified Person/QA : apt. Dr. Arry S., M.Si.     [AUTHORIZED BPOM]
 ========================================================================================"""
 
-    st.text_area("Pratinjau Dokumen Cetak:", value=doc_text, height=320)
-    st.download_button(
-        label="📥 Download Formulir Resmi CPOB (.txt)",
-        data=doc_text,
-        file_name=f"Laporan_CPOB_{current_case['code']}.txt",
-        mime="text/plain",
-        use_container_width=True
-    )
+    # Build formatted Microsoft Word (.doc) HTML
+    ca_rows = "".join([f"<tr><td style='text-align:center;font-weight:bold;'>{c['Kode']}</td><td>{c['Tindakan']}</td><td>{c['PIC']}</td><td style='text-align:center;'>{c['Target']}</td><td style='text-align:center;'>{c['Status']}</td></tr>" for c in current_case['capa']['corrective']])
+    pa_rows = "".join([f"<tr><td style='text-align:center;font-weight:bold;'>{p['Kode']}</td><td>{p['Tindakan']}</td><td>{p['PIC']}</td><td style='text-align:center;'>{p['Target']}</td><td style='text-align:center;'>{p['Status']}</td></tr>" for p in current_case['capa']['preventive']])
+    whys_items = "".join([f"<li style='margin-bottom:6px;'><strong>W{i+1}: {w[0]}</strong><br><span style='color:#334155;'>{w[1]}</span></li>" for i, w in enumerate(current_case['five_whys'])])
+
+    word_html = f"""<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset='utf-8'>
+  <title>Formulir CPOB - {current_case['code']}</title>
+  <!--[if gte mso 9]>
+  <xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml>
+  <![endif]-->
+  <style>
+    body {{ font-family: Arial, sans-serif; font-size: 10pt; color: #0f172a; margin: 15mm; }}
+    table {{ width: 100%; border-collapse: collapse; margin-bottom: 8px; }}
+    td, th {{ border: 1px solid #475569; padding: 6px 8px; font-size: 9pt; }}
+    .sec-title {{ background: #0f172a; color: #ffffff; font-weight: bold; padding: 5px 8px; font-size: 9.5pt; margin-top: 10px; margin-bottom: 5px; }}
+    .grid-label {{ background: #f1f5f9; font-weight: bold; width: 130px; }}
+    .badge {{ padding: 3px 8px; font-weight: bold; border-radius: 4px; }}
+    .badge-critical {{ background: #fee2e2; color: #991b1b; }}
+    .badge-major {{ background: #fef3c7; color: #92400e; }}
+    .badge-minor {{ background: #e0f2fe; color: #075985; }}
+    .stamp {{ border: 1.5px dashed #0284c7; padding: 4px; text-align: center; color: #0284c7; font-weight: bold; font-size: 8pt; }}
+  </style>
+</head>
+<body>
+  <table style="border: 2px solid #0f172a; margin-bottom: 12px;">
+    <tr>
+      <td style="width: 100px; text-align: center; vertical-align: middle;">
+        <div style="font-size: 26pt; color: #0284c7;">✚</div>
+        <div style="font-size: 8pt; font-weight: bold;">PHARMA QA</div>
+      </td>
+      <td style="text-align: center;">
+        <div style="font-size: 8.5pt; color: #475569; font-weight: bold;">PT PHARMA NUSANTARA Tbk. — QUALITY ASSURANCE DIVISION</div>
+        <div style="font-size: 13pt; font-weight: bold; color: #0f172a; margin: 3px 0;">FORMULIR PENYELIDIKAN PENYIMPANGAN & RENCANA CAPA</div>
+        <div style="font-size: 8pt; color: #0284c7; font-weight: bold;">CPOB 2018/2024 (BPOM RI) & cGMP FDA 21 CFR Part 211 COMPLIANT</div>
+      </td>
+      <td style="width: 150px; font-size: 8.5pt;">
+        <strong>No. Dok:</strong> SOP-QA-042<br>
+        <strong>No. Dev:</strong> <span style="color:#0284c7; font-weight:bold;">{current_case['code']}</span><br>
+        <strong>Tgl:</strong> {datetime.now().strftime('%Y-%m-%d')}
+      </td>
+    </tr>
+  </table>
+
+  <div class="sec-title">BAGIAN 1: INFORMASI BETS & RINCIAN PENYIMPANGAN</div>
+  <table>
+    <tr>
+      <td class="grid-label">Nama Produk</td><td><strong>{current_case['product']}</strong></td>
+      <td class="grid-label">No. Bets / Lot</td><td><strong>{current_case['batch']}</strong></td>
+    </tr>
+    <tr>
+      <td class="grid-label">Bentuk Sediaan</td><td>{current_case['dosage_form']}</td>
+      <td class="grid-label">Lini Produksi</td><td>{current_case['line']}</td>
+    </tr>
+    <tr>
+      <td class="grid-label">Kelas Ruangan</td><td>{current_case['cleanroom']}</td>
+      <td class="grid-label">Tahapan Proses</td><td>{current_case['stage']}</td>
+    </tr>
+  </table>
+  <div style="border: 1px solid #cbd5e1; background: #f8fafc; padding: 8px 10px; margin-bottom: 10px; font-size: 9pt;">
+    <strong>Deskripsi Faktual Kejadian:</strong><br>{current_case['description']}
+  </div>
+
+  <div class="sec-title">BAGIAN 2: KAJIAN RISIKO MUTU & DISPOSISI BETS (ICH Q9)</div>
+  <table>
+    <tr>
+      <td style="width: 50%;">
+        <strong>Klasifikasi:</strong> <span class="badge badge-{current_case['classification'].lower()}">{current_case['classification'].upper()}</span><br>
+        <strong>RPN:</strong> {current_case['rpn']} (S:{current_case['severity']} × P:{current_case['probability']} × D:{current_case['detectability']})
+      </td>
+      <td>
+        <strong>Disposisi Bets:</strong> <span style="color:#b91c1c; font-weight:bold;">{current_case['disposition']}</span><br>
+        <strong>Dampak CQA:</strong> {current_case['cqa_impact']}
+      </td>
+    </tr>
+  </table>
+
+  <div class="sec-title">BAGIAN 3: ANALISIS AKAR MASALAH (5-WHYS METHODOLOGY)</div>
+  <ol style="font-size: 9pt; padding-left: 20px;">
+    {whys_items}
+  </ol>
+
+  <div class="sec-title">BAGIAN 4: RENCANA CAPA (ICH Q10)</div>
+  <div style="font-weight:bold; font-size:9pt; margin: 5px 0;">A. Tindakan Korektif Langsung (Corrective Action - CA)</div>
+  <table>
+    <tr style="background:#f1f5f9;"><th>Kode</th><th>Tindakan Korektif</th><th>PIC</th><th>Target</th><th>Status</th></tr>
+    {ca_rows}
+  </table>
+
+  <div style="font-weight:bold; font-size:9pt; margin: 8px 0 5px;">B. Tindakan Pencegahan Sistemik (Preventive Action - PA)</div>
+  <table>
+    <tr style="background:#f1f5f9;"><th>Kode</th><th>Tindakan Pencegahan</th><th>PIC</th><th>Target</th><th>Status</th></tr>
+    {pa_rows}
+  </table>
+
+  <div style="border: 1px dashed #0284c7; background: #f0f9ff; padding: 6px 10px; font-size: 8.5pt; margin: 8px 0;">
+    <strong>Protokol Cek Efektivitas CAPA:</strong> {current_case['capa']['review']}
+  </div>
+
+  <div class="sec-title">BAGIAN 5: OTORISASI & TANDA TANGAN (CPOB BPOM)</div>
+  <table>
+    <tr>
+      <td style="width: 33.3%; text-align: center;">
+        <div style="font-size: 8pt; color:#64748b;">DIPERIKSA (INVESTIGATOR):</div>
+        <div class="stamp" style="margin: 8px auto; width: 140px;">DIGITALLY VERIFIED<br><small>QA Specialist</small></div>
+        <strong>apt. Rismawati L., S.Farm.</strong>
+      </td>
+      <td style="width: 33.3%; text-align: center;">
+        <div style="font-size: 8pt; color:#64748b;">DISETUJUI (PRODUKSI):</div>
+        <div class="stamp" style="margin: 8px auto; width: 140px;">DIGITALLY VERIFIED<br><small>Head of Production</small></div>
+        <strong>Ir. Hendra Wijaya, M.M.</strong>
+      </td>
+      <td style="width: 33.3%; text-align: center;">
+        <div style="font-size: 8pt; color:#64748b;">DISETUJUI (QA HEAD):</div>
+        <div class="stamp" style="border-color:#b45309; color:#b45309; margin: 8px auto; width: 140px;">QUALIFIED PERSON<br><small>BPOM Authorized</small></div>
+        <strong>apt. Dr. Arry S., M.Si.</strong>
+      </td>
+    </tr>
+  </table>
+</body></html>"""
+
+    col_dl1, col_dl2 = st.columns(2)
+    with col_dl1:
+        st.download_button(
+            label="📥 Unduh Dokumen Microsoft Word (.doc) Lengkap Tabel",
+            data=word_html,
+            file_name=f"Formulir_CPOB_{current_case['code']}.doc",
+            mime="application/msword",
+            use_container_width=True
+        )
+    with col_dl2:
+        st.download_button(
+            label="📄 Unduh Ringkasan Teks (.txt)",
+            data=doc_text,
+            file_name=f"Laporan_CPOB_{current_case['code']}.txt",
+            mime="text/plain",
+            use_container_width=True
+        )
