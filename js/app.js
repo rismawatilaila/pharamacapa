@@ -294,15 +294,29 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.reportModal.classList.remove('active');
   });
 
-  elements.btnPrintReport.addEventListener('click', () => {
-    window.pharmaReport.printReport();
-  });
+  const btnExecuteExport = document.getElementById('btnExecuteExport');
+  const exportFormatSelect = document.getElementById('exportFormatSelect');
+  const btnExportLabel = document.getElementById('btnExportLabel');
 
-  const btnDownloadWord = document.getElementById('btnDownloadWord');
-  if (btnDownloadWord) {
-    btnDownloadWord.addEventListener('click', () => {
-      if (state.currentAnalysisData) {
-        window.pharmaReport.downloadWordDoc(state.currentAnalysisData);
+  if (exportFormatSelect && btnExportLabel) {
+    exportFormatSelect.addEventListener('change', () => {
+      if (exportFormatSelect.value === 'doc') {
+        btnExportLabel.textContent = 'Unduh Dokumen Word (.doc)';
+      } else {
+        btnExportLabel.textContent = 'Cetak / Simpan ke PDF';
+      }
+    });
+  }
+
+  if (btnExecuteExport && exportFormatSelect) {
+    btnExecuteExport.addEventListener('click', () => {
+      const selected = exportFormatSelect.value;
+      if (selected === 'doc') {
+        if (state.currentAnalysisData) {
+          window.pharmaReport.downloadWordDoc(state.currentAnalysisData);
+        }
+      } else {
+        window.pharmaReport.printReport();
       }
     });
   }

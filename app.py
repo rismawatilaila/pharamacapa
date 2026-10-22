@@ -629,18 +629,93 @@ BAGIAN 5: OTORISASI & TANDA TANGAN
   </table>
 </body></html>"""
 
-    col_dl1, col_dl2 = st.columns(2)
-    with col_dl1:
+    st.markdown("---")
+    st.markdown("#### 📥 Pilihan Format Unduhan Dokumen (Dropdown):")
+
+    format_pilihan = st.selectbox(
+        "Pilih Format Berkas yang Diinginkan:",
+        [
+            "📝 Dokumen Microsoft Word (.doc — Lengkap Format Tabel CPOB)",
+            "📄 Dokumen PDF (Cetak & Simpan sebagai PDF A4 Standar QA)",
+            "📋 Ringkasan Teks Baku (.txt)"
+        ],
+        index=0,
+        help="Pilih format berkas yang ingin Anda unduh atau cetak."
+    )
+
+    if "Microsoft Word" in format_pilihan:
+        st.info("💡 **Format Word (.doc):** Berkas ini dapat langsung dibuka di Microsoft Word dengan seluruh kop surat ✚, tabel deviasi, matriks CAPA, dan kotak tanda tangan resmi.")
         st.download_button(
-            label="📥 Unduh Dokumen Microsoft Word (.doc) Lengkap Tabel",
+            label="📥 Unduh Dokumen Microsoft Word (.doc)",
             data=word_html,
             file_name=f"Formulir_CPOB_{current_case['code']}.doc",
             mime="application/msword",
             use_container_width=True
         )
-    with col_dl2:
+    elif "PDF" in format_pilihan:
+        st.info("💡 **Format PDF:** Klik tombol di bawah untuk membuka pratinjau cetak resmi A4 dan simpan langsung sebagai berkas PDF di perangkat Anda.")
+        
+        # Embedded print-to-PDF button
+        import streamlit.components.v1 as components
+        pdf_html_page = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            .print-btn {{
+              background: linear-gradient(135deg, #0ea5e9, #0284c7);
+              color: #ffffff;
+              border: none;
+              border-radius: 8px;
+              padding: 12px 20px;
+              font-family: sans-serif;
+              font-size: 15px;
+              font-weight: bold;
+              cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              width: 100%;
+              justify-content: center;
+              box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+            }}
+            .print-btn:hover {{
+              background: #0284c7;
+            }}
+          </style>
+        </head>
+        <body style="margin: 0; background: transparent;">
+          <button class="print-btn" onclick="openPrintWindow()">
+            🖨️ Buka &amp; Simpan Dokumen sebagai PDF (A4 Standar)
+          </button>
+          <script>
+            function openPrintWindow() {{
+              var printWin = window.open('', '_blank');
+              printWin.document.write({json.dumps(word_html)});
+              printWin.document.close();
+              printWin.focus();
+              setTimeout(function() {{
+                printWin.print();
+              }}, 400);
+            }}
+          </script>
+        </body>
+        </html>
+        """
+        components.html(pdf_html_page, height=65)
+
         st.download_button(
-            label="📄 Unduh Ringkasan Teks (.txt)",
+            label="📥 Alternatif: Unduh Berkas Cetak (.html)",
+            data=word_html,
+            file_name=f"Formulir_CPOB_{current_case['code']}.html",
+            mime="text/html",
+            use_container_width=True
+        )
+    else:
+        st.info("💡 **Format Teks (.txt):** Ringkasan teks naratif baku deviasi mutu.")
+        st.download_button(
+            label="📥 Unduh Ringkasan Teks (.txt)",
             data=doc_text,
             file_name=f"Laporan_CPOB_{current_case['code']}.txt",
             mime="text/plain",

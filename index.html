@@ -396,16 +396,19 @@
       <div class="modal-body" id="reportDocContainer">
         <!-- Rendered via report-generator.js -->
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <button class="btn-secondary" onclick="document.getElementById('btnCloseReport').click()">Tutup</button>
-        <button class="btn-secondary" id="btnDownloadWord" title="Unduh formulir ini dalam format Microsoft Word (.doc) berformat tabel lengkap">
-          <span>📥</span>
-          <span>Unduh Format Word (.doc)</span>
-        </button>
-        <button class="btn-primary" id="btnPrintReport">
-          <span>🖨️</span>
-          <span>Cetak ke PDF / Print (A4 Standar QA)</span>
-        </button>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <label for="exportFormatSelect" style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">Pilih Format:</label>
+          <select id="exportFormatSelect" class="form-select" style="width: 260px; padding: 7px 12px; font-size: 0.82rem;">
+            <option value="doc">📝 Dokumen Microsoft Word (.doc)</option>
+            <option value="pdf">📄 Dokumen Resmi PDF (Cetak A4)</option>
+          </select>
+          <button class="btn-primary" id="btnExecuteExport">
+            <span>📥</span>
+            <span id="btnExportLabel">Unduh Dokumen Word (.doc)</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
