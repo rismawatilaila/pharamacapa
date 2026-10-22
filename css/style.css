@@ -1465,6 +1465,93 @@ body {
   padding-top: 5px;
 }
 
+/* Mobile Responsive Optimization for Smartphone & Tablet Access */
+@media screen and (max-width: 768px) {
+  .top-navbar {
+    padding: 0.8rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .nav-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .app-container {
+    padding: 1rem 0.8rem 3rem;
+  }
+
+  .case-selector-bar {
+    padding: 1rem;
+  }
+
+  .case-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .metrics-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs-header {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
+  }
+
+  .fishbone-canvas-wrapper {
+    padding: 0.5rem;
+  }
+
+  .fishbone-svg {
+    min-width: 750px;
+  }
+
+  .modal-container {
+    max-height: 94vh;
+    border-radius: 14px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .modal-footer > div {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  #exportFormatSelect, #btnExecuteExport {
+    width: 100% !important;
+  }
+}
+
 /* Print Media Query - Flawless Multi-Page CPOB PDF Output */
 @media print {
   @page {
