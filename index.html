@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PharmaCAPA AI — Industrial Pharmaceutical Deviation & Root Cause Copilot</title>
+  <meta name="description" content="Aplikasi AI Industri Farmasi untuk Manajemen Penyimpangan Mutu (Batch Deviation), Analisis Akar Masalah (6M Ishikawa & 5-Whys), dan Penyusunan Tindakan Korektif & Preventif (CAPA) berstandar BPOM CPOB 2018/2024 dan ICH Q9/Q10.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✚</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    <div class="brand-section">
+      <div class="brand-logo-badge" id="appLogoBadge">✚</div>
+      <div class="brand-text-block">
+        <h1>PharmaCAPA AI</h1>
+        <p>Pharmaceutical Batch Deviation &amp; Root Cause Copilot • CPOB &amp; cGMP Compliant</p>
+      </div>
+    </div>
+    
+    <div class="nav-actions">
+      <div class="nav-pill-badge" id="navComplianceBadge">
+        <span class="dot"></span>
+        <span>BPOM CPOB &amp; ICH Q9/Q10 Aligned</span>
+      </div>
+      <button class="btn-secondary" id="btnConfigApi" title="Pengaturan Model AI (Gemini API / Offline Expert)">
+        <span>⚙️</span>
+        <span>Pengaturan AI</span>
+      </button>
+      <button class="btn-primary" id="btnOpenReport" title="Buka Dokumen Resmi Formulir Penyelidikan CPOB">
+        <span>📄</span>
+        <span>Cetak Dokumen Resmi CPOB</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="app-container">
+
+    <!-- Preset Case Studies Selector -->
+    <section class="case-selector-bar">
+      <div class="section-label-group">
+        <div class="section-label">
+          <span>💊</span>
+          <span>Pilih Kasus Uji Industri Farmasi (Preset Realistis QA Pabrik):</span>
+        </div>
+        <div class="regulatory-tagline">
+          Pedoman CPOB 2018/2024 • FDA 21 CFR 211.192 • Risk-Based Decision Making
+        </div>
+      </div>
+
+      <div class="case-buttons-grid" id="presetGrid">
+        <!-- Preset 1 -->
+        <button class="case-pill-btn active" data-case-id="case-01" id="presetBtn1">
+          <div class="pill-meta-row">
+            <span class="pill-code">DEV-2026-0842</span>
+            <span class="pill-sev-tag major">Major</span>
+          </div>
+          <div class="pill-title">Uji Disolusi OOS Paracetamol</div>
+          <div class="pill-product">Tablet Paracetamol 500 mg • Lini Solid</div>
+        </button>
+
+        <!-- Preset 2 -->
+        <button class="case-pill-btn" data-case-id="case-02" id="presetBtn2">
+          <div class="pill-meta-row">
+            <span class="pill-code">DEV-2026-0915</span>
+            <span class="pill-sev-tag critical">Critical</span>
+          </div>
+          <div class="pill-title">Ekskursi Suhu FBD Granulasi</div>
+          <div class="pill-product">Amoxicillin 125mg Sirup • Betalaktam</div>
+        </button>
+
+        <!-- Preset 3 -->
+        <button class="case-pill-btn" data-case-id="case-03" id="presetBtn3">
+          <div class="pill-meta-row">
+            <span class="pill-code">DEV-2026-1002</span>
+            <span class="pill-sev-tag critical">Critical</span>
+          </div>
+          <div class="pill-title">Partikel Asing Filling Aseptis</div>
+          <div class="pill-product">Ceftriaxone 1g Injeksi • Ruang Kelas A/B</div>
+        </button>
+
+        <!-- Preset 4 -->
+        <button class="case-pill-btn" data-case-id="case-04" id="presetBtn4">
+          <div class="pill-meta-row">
+            <span class="pill-code">DEV-2026-1120</span>
+            <span class="pill-sev-tag minor">Minor</span>
+          </div>
+          <div class="pill-title">Variasi Bobot &amp; Capping Tablet</div>
+          <div class="pill-product">Cetirizine 10 mg • Cetak Rotari</div>
+        </button>
+
+        <!-- Custom Case -->
+        <button class="case-pill-btn case-custom-btn" data-case-id="custom" id="presetBtnCustom">
+          <div class="pill-meta-row">
+            <span class="pill-code" style="color: #c4b5fd;">DEV-CUSTOM</span>
+            <span class="pill-sev-tag" style="background: rgba(139,92,246,0.2); color:#ddd6fe;">Live Demo</span>
+          </div>
+          <div class="pill-title">✨ Input Deviasi Kustom Bebas</div>
+          <div class="pill-product">Ketik kasus deviasi sendiri untuk diuji AI</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Studio Grid (Left: Investigation Form, Right: Visual Analysis Workspace) -->
+    <div class="studio-grid">
+
+      <!-- LEFT: Investigation Input Studio -->
+      <aside class="glass-panel">
+        <div class="panel-header">
+          <h2>
+            <span>📝</span>
+            <span>Formulir Investigasi Deviasi QA</span>
+          </h2>
+          <span style="font-size: 0.72rem; color: #7dd3fc; font-weight: 600;">SOP-QA-042</span>
+        </div>
+
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="form-label" for="inputProduct">Nama Produk &amp; Kekuatan Sediaan</label>
+            <input type="text" id="inputProduct" class="form-input" placeholder="contoh: Paracetamol 500 mg Kaplet">
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="inputBatch">No. Bets / Batch</label>
+              <input type="text" id="inputBatch" class="form-input" style="font-family: var(--font-mono);" placeholder="BTH-PCT-260412">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputDosageForm">Bentuk Sediaan</label>
+              <select id="inputDosageForm" class="form-select">
+                <option value="Tablet / Kaplet Salut Film">Tablet / Kaplet</option>
+                <option value="Kapsul Keras">Kapsul Keras</option>
+                <option value="Sirup / Suspensi Oral">Sirup / Suspensi Oral</option>
+                <option value="Injeksi / Infus Steril">Injeksi / Infus Steril</option>
+                <option value="Salep / Krim Semisolid">Salep / Krim Semisolid</option>
+                <option value="Serbuk Kering Rekonstitusi">Serbuk Kering</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="inputAreaGrade">Kelas Ruang Bersih</label>
+              <select id="inputAreaGrade" class="form-select">
+                <option value="Kelas A (Laminar Air Flow)">Kelas A (LAF Steril)</option>
+                <option value="Kelas B (Background Steril)">Kelas B (Latar Belakang Steril)</option>
+                <option value="Kelas C (Proses Bersih)">Kelas C (Proses Bersih)</option>
+                <option value="Kelas D (Ruang Pengolahan Non-Steril)">Kelas D (Controlled)</option>
+                <option value="Kelas E (White Area Produksi Solid)">Kelas E (White Area Non-Steril)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputStage">Tahapan Proses</label>
+              <input type="text" id="inputStage" class="form-input" placeholder="contoh: Pencetakan Tablet">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="inputLine">Lini Produksi / Lokasi</label>
+              <input type="text" id="inputLine" class="form-input" placeholder="Lini Solid Gedung II">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputDetectedBy">Dideteksi Oleh</label>
+              <input type="text" id="inputDetectedBy" class="form-input" placeholder="Analis QC / Operator">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputDescription">Deskripsi Lengkap Kejadian Deviasi (Faktual &amp; Spesifik)</label>
+            <textarea id="inputDescription" class="form-textarea" placeholder="Tuliskan temuan penyimpangan secara rinci..."></textarea>
+          </div>
+
+          <!-- Parameter Pills Box -->
+          <div class="param-pills-box">
+            <div class="param-pills-title">Telemetri &amp; Parameter Kritis Terkait (CPP/CQA):</div>
+            <div class="param-grid" id="paramPillsGrid">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+
+          <!-- Analyze Trigger Button -->
+          <button class="btn-primary ai-trigger-btn" id="btnAnalyze">
+            <span>⚡</span>
+            <span>Jalankan Analisis AI CPOB / ICH Q9</span>
+          </button>
+          
+          <div class="ai-engine-status" id="metricEngineUsed">
+            Pharma Expert Neural Engine (ICH Q9 / CPOB Mode)
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT: Visual Analysis Workspace -->
+      <section class="analysis-workspace">
+
+        <!-- Executive Overview Header Card -->
+        <div class="overview-card">
+          <div class="overview-left">
+            <h3 id="overviewTitle">Penyimpangan Mutu: Paracetamol 500 mg</h3>
+            <div class="overview-meta">
+              <span>📌 No. Deviasi: <strong id="overviewCode" style="color:#7dd3fc; font-family: var(--font-mono);">DEV-2026-0842</strong></span>
+              <span>📦 Bets: <strong id="overviewProduct">Paracetamol (BTH-PCT-260412)</strong></span>
+              <span>📅 Tanggal: <strong id="overviewDate">2026-10-22</strong></span>
+            </div>
+          </div>
+          <div class="overview-right">
+            <button class="btn-secondary" id="btnQuickReport" onclick="document.getElementById('btnOpenReport').click()">
+              <span>📑</span>
+              <span>Lihat Laporan CPOB</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Executive Metric Badges (RPN, Severity, Disposition) -->
+        <div class="metrics-row">
+          <!-- Metric 1: RPN Score -->
+          <div class="metric-card">
+            <div class="metric-icon-box bg-cyan-tint">📊</div>
+            <div class="metric-info">
+              <div class="m-label">RPN (Risk Priority Number)</div>
+              <div class="m-val" id="metricRpn">12</div>
+              <div class="m-sub" id="metricRpnDetail">S:4 × P:3 × D:1 (ICH Q9 FMEA)</div>
+            </div>
+          </div>
+
+          <!-- Metric 2: Severity Level -->
+          <div class="metric-card">
+            <div class="metric-icon-box bg-amber-tint" id="metricSeverityBadge">⚠️</div>
+            <div class="metric-info">
+              <div class="m-label">Klasifikasi Deviasi</div>
+              <div class="m-val" id="metricSeverity">MAJOR</div>
+              <div class="m-sub">Tingkat Dampak Mutu Produk</div>
+            </div>
+          </div>
+
+          <!-- Metric 3: Batch Disposition -->
+          <div class="metric-card">
+            <div class="metric-icon-box bg-rose-tint">🔒</div>
+            <div class="metric-info">
+              <div class="m-label">Rekomendasi Disposisi Bets</div>
+              <div class="m-val" id="metricDisposition" style="font-size: 0.95rem; line-height: 1.25;">Karantina &amp; Evaluasi Rework</div>
+              <div class="m-sub">Protokol Penahanan CPOB</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabbed Studio Container -->
+        <div class="tabs-container">
+          <div class="tabs-header">
+            <button class="tab-btn active" data-tab="tabFishbone" id="tabBtnFishbone">
+              <span>🐟</span>
+              <span>Diagram Tulang Ikan 6M (Ishikawa)</span>
+            </button>
+            <button class="tab-btn" data-tab="tabFiveWhys" id="tabBtnFiveWhys">
+              <span>🔍</span>
+              <span>Metode 5-Whys Root Cause</span>
+            </button>
+            <button class="tab-btn" data-tab="tabCapa" id="tabBtnCapa">
+              <span>🛡️</span>
+              <span>Rencana CAPA (ICH Q10)</span>
+            </button>
+          </div>
+
+          <!-- Tab 1: Interactive Ishikawa Fishbone Diagram -->
+          <div class="tab-content-panel active" id="tabFishbone">
+            <div class="fishbone-section">
+              <div class="fishbone-toolbar">
+                <span style="font-size: 0.8rem; font-weight: 600; color: #e2e8f0;">
+                  Model Ishikawa 6M Industri Farmasi (Man, Machine, Material, Method, Measurement, Milieu)
+                </span>
+                <div class="fishbone-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot dot-root"></span>
+                    <span>Akar Masalah Kritis (Root Cause)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot dot-contributing"></span>
+                    <span>Faktor Kontributor</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SVG Target Canvas -->
+              <div class="fishbone-canvas-wrapper" id="fishboneSvgContainer">
+                <!-- SVG rendered here via fishbone.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: 5-Whys Root Cause Drill-Down -->
+          <div class="tab-content-panel" id="tabFiveWhys">
+            <div id="fiveWhysContainer">
+              <!-- Rendered via fishbone.js -->
+            </div>
+          </div>
+
+          <!-- Tab 3: CAPA Management Board -->
+          <div class="tab-content-panel" id="tabCapa">
+            <div class="capa-board-section">
+              
+              <!-- Corrective Actions Block -->
+              <div class="capa-block">
+                <div class="capa-block-header">
+                  <div class="capa-block-title" style="color: #38bdf8;">
+                    <span>⚡</span>
+                    <span>Tindakan Korektif Langsung (Corrective Action - CA)</span>
+                  </div>
+                  <span style="font-size: 0.74rem; color: var(--text-dim);">Penanganan Segera &amp; Penahanan Bets</span>
+                </div>
+                <table class="capa-items-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 80px;">Kode</th>
+                      <th>Deskripsi Tindakan Korektif</th>
+                      <th style="width: 190px;">Penanggung Jawab</th>
+                      <th style="width: 100px;">Target</th>
+                      <th style="width: 120px;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="caTableBody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Preventive Actions Block -->
+              <div class="capa-block">
+                <div class="capa-block-header">
+                  <div class="capa-block-title" style="color: #a78bfa;">
+                    <span>🛡️</span>
+                    <span>Tindakan Pencegahan Sistemik (Preventive Action - PA)</span>
+                  </div>
+                  <span style="font-size: 0.74rem; color: var(--text-dim);">Pencegahan Deviasi Berulang (SOP / Interlock / Training)</span>
+                </div>
+                <table class="capa-items-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 80px;">Kode</th>
+                      <th>Deskripsi Tindakan Pencegahan</th>
+                      <th style="width: 190px;">Penanggung Jawab</th>
+                      <th style="width: 100px;">Target</th>
+                      <th style="width: 120px;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="paTableBody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Effectiveness Review Banner -->
+              <div class="effectiveness-card">
+                <div class="eff-icon">🎯</div>
+                <div class="eff-details">
+                  <h4>Protokol Evaluasi Efektivitas CAPA (<span id="effInterval">60 Hari</span>)</h4>
+                  <p id="effCriteria">Zero recurring deviation dalam 5 batch komersial berikutnya.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Modal: Official CPOB Deviation & CAPA Report -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="modal-container" style="max-width: 980px;">
+      <div class="modal-header">
+        <h3>
+          <span>📄</span>
+          <span>Formulir Resmi Penyelidikan Deviasi &amp; Rencana CAPA (CPOB BPOM)</span>
+        </h3>
+        <button class="btn-close-modal" id="btnCloseReport">&times;</button>
+      </div>
+      <div class="modal-body" id="reportDocContainer">
+        <!-- Rendered via report-generator.js -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="document.getElementById('btnCloseReport').click()">Tutup</button>
+        <button class="btn-primary" id="btnPrintReport">
+          <span>🖨️</span>
+          <span>Cetak ke PDF / Print (A4 Standar QA)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: AI Configuration & API Key -->
+  <div class="modal-overlay" id="apiModal">
+    <div class="modal-container" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3>
+          <span>⚙️</span>
+          <span>Pengaturan Mesin AI (Gemini / Offline Expert)</span>
+        </h3>
+        <button class="btn-close-modal" id="btnCloseApi">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size: 0.84rem; color: #cbd5e1; margin-bottom: 1.2rem; line-height: 1.5;">
+          Aplikasi ini memiliki <strong>Dual-Engine Architecture</strong>:<br>
+          1. <strong>Pharma Expert Neural Engine (Offline Default):</strong> Berjalan instan tanpa API key menggunakan aturan heuristik &amp; matriks risiko CPOB / ICH Q9.<br>
+          2. <strong>Live Google Gemini API (Opsional):</strong> Masukkan API key jika Anda ingin analisis generatif real-time langsung ke LLM Google Gemini.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inputApiKey">Google Gemini API Key (Opsional)</label>
+          <input type="password" id="inputApiKey" class="form-input" placeholder="AIzaSy...">
+          <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 5px;">
+            API key hanya tersimpan lokal di peramban Anda (Local Storage) dan tidak pernah dikirim ke server pihak ketiga.
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem; font-size: 0.8rem;" id="apiStatusNote">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnRemoveApiKey">Hapus Key (Gunakan Offline)</button>
+        <button class="btn-primary" id="btnSaveApiKey">Simpan Pengaturan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/pharma-data.js"></script>
+  <script src="js/ai-engine.js"></script>
+  <script src="js/fishbone.js"></script>
+  <script src="js/report-generator.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
